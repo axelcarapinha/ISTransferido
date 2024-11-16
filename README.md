@@ -1,13 +1,14 @@
 # ISTransferido
-Download the files of all your courses ⚡ in a brief ⚡ <br/>
+Download the files of all your courses in a brief <br/>
 Redoit it, and only the new ones will be added;<br/>
 All new files will be in the inbox folder 📥 <br/>
 Uses <a href="https://scrapy.org/">Scrapy's library</a>. <br/>
+<br/>
+Disclaimer: optimized for Fenix's pages, but easily customizable with other XPaths.
 
 ### Configuration
 1. Prepare the virtual environment
 ```bash
-# (1.) 
 bash init.sh
 ```
 2. Create the file with credentials
@@ -38,7 +39,7 @@ cd istransferido/ && scrapy crawl ist_spider && cd ../ && bash filter-inbox.sh
 ### Contributions
 Feel free to change or contribute! <br/>
 I leave some unimplemented ideas, for me or others :) <br/>
-- Avoid repeated downloads without the files being in the folder (using some Scrapy's functionality?)
+- Avoid repeated downloads without the files being in the folder (it uses bash for now because of the relatively small amount of files)
 - An alternative for credentials in the .env
 
 
