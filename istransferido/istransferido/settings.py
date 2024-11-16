@@ -67,6 +67,7 @@ ITEM_PIPELINES = {
 }
 
 DOWNLOAD_TIMEOUT = 30
+DOWNLOAD_DELAY = 1 # avoid overloading the server
 FILES_STORE = '/home/heyuser/Desktop/testinfiles'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
