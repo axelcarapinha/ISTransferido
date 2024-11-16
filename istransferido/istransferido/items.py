@@ -5,7 +5,7 @@
 
 import scrapy
 import os 
-from scrapy.loader.processors import TakeFirst, MapCompose 
+from scrapy.loader.processors import MapCompose, TakeFirst
 
 def remove_extension(value):
     return os.path.splitext(value)[0]

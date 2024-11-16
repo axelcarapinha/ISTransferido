@@ -18,3 +18,8 @@ class IstransferidoPipeline(FilesPipeline):
         url = request.url
         media_ext = os.path.splitext(url)[1] 
         return f"full/{request.meta['filename']}{media_ext}"
+
+
+
+
+

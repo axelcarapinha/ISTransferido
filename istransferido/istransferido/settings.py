@@ -67,7 +67,7 @@ ITEM_PIPELINES = {
 }
 
 DOWNLOAD_TIMEOUT = 30
-DOWNLOAD_DELAY = 1 # avoid overloading the server
+DOWNLOAD_DELAY = 2 # avoid overloading the server
 FILES_STORE = '/home/heyuser/Desktop/testinfiles'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -90,8 +90,3 @@ FILES_STORE = '/home/heyuser/Desktop/testinfiles'
 #HTTPCACHE_DIR = "httpcache"
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
-
-# Set settings whose default value is deprecated to a future-proof value
-REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
-FEED_EXPORT_ENCODING = "utf-8"
