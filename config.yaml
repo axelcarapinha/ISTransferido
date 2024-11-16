@@ -1,0 +1,9 @@
+# "Read the source, Luke!"
+courses:
+  - 'https://fenix.tecnico.ulisboa.pt/disciplinas/IEI11/2024-2025/1-semestre/'
+  - 'https://fenix.tecnico.ulisboa.pt/disciplinas/CDI421/2024-2025/1-semestre'
+
+downloads_folder: '00_downloads_folder' # folder used for the file downloads
+inbox_folder: '01_inbox_folder'     # organized output folder
+
+keep_copy: True           # keeps copy of the original file in the untidy folder (avoids repetitve downloads)

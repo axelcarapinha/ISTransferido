@@ -10,8 +10,8 @@ from dotenv import load_dotenv
 from scrapy.utils.log import SpiderLoggerAdapter
 import logging
 
-
 #TODO centralize this initial setup into a file / function /....
+
 # Read the (YAML) configuration file 
 file_path = '../config.yaml'
 with open(file_path, 'r') as file:
@@ -34,12 +34,9 @@ DEBUG = debug_value == 'True'
 # (NOT defined in settings.py to make it specific only to this spider)
 STATS_LEVEL = 15 # between INFO (10) and DEBUG (20)
 logging.addLevelName(STATS_LEVEL, "STATS")
-def stats_logs(self, message, *args, **kwargs):
-    if self.isEnabledFor(STATS_LEVEL):
-        self._log(STATS_LEVEL, message, args, **kwargs)
-logging.Logger.stats_logs = stats_logs
 
 # Now set up logging globally for the Scrapy Spider
+#TODO define this in the class only
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
@@ -54,17 +51,6 @@ color_formatter = colorlog.ColoredFormatter(
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(color_formatter)
 logger.addHandler(console_handler)
-
-
-
-
-
-
-
-
-
-
-
 
 """
 Spider for scraping files (PDFs, ZIPs, JPGs) from the Fenix platform.
@@ -103,7 +89,6 @@ class FenixSpider(scrapy.Spider):
 
     # Login first (content is authorized for logged-in users only)
     def start_requests(self):
-        # self.logger.verbose(f"EXAMPLE!!!")
         yield scrapy.Request(url=self.LOGIN_URL, callback=self.login)  # yield allows lazy evaluation
 
     # Login and consider CSRF tokens if needed
@@ -118,11 +103,11 @@ class FenixSpider(scrapy.Spider):
         )
 
     # Ensure verbose method is attached to SpiderLoggerAdapter
-    def verbose(self, message, *args, **kwargs):
+    #TODO
+    def stats_logs(self, message, *args, **kwargs):
         if self.isEnabledFor(STATS_LEVEL):
             self._log(STATS_LEVEL, message, args, **kwargs)
-    SpiderLoggerAdapter.verbose = verbose
-
+    SpiderLoggerAdapter.stats_logs = stats_logs
 
     # Starts the scraping for each course
     def search_base_urls(self, response):
@@ -152,24 +137,41 @@ class FenixSpider(scrapy.Spider):
 
     # Downloads all the available files from the provided URL
     def extract_file_urls(self, response):
+        URL_COURSE_POSITION = 4 # the position of the course name in the URL
+
         xpath = response.meta['xpath']  # use a different XPath to select the links
         for link in response.xpath(xpath):
-            relative_url = link.xpath('.//@href').extract_first()  
+            relative_url = link.xpath('.//@href').extract_first()
             absolute_url = urljoin(response.url, relative_url)     
 
-            # Download the files using the FilesPipeline (thx Scrapy!)
+            # Extract the third part of the URL as the course
+            url_parts = response.url.split('/')
+            if len(url_parts) > URL_COURSE_POSITION:
+                course = url_parts[URL_COURSE_POSITION]
+            else:
+                course = "unknown"
+            
+            # Extract the file name from the link
+            name = link.xpath('.//text()').extract_first()  # Use xpath on 'link' to extract the text (file name)
+            
+            # Combine course and file name to create the filename
+            filename = f"{course}_{name}"
+            
+            # Download the files using the FilesPipeline (Scrapy's default functionality)
             self.logger.info(f"File URL found: {absolute_url}")
             loader = ItemLoader(item=IstransferidoItem(), selector=link)
+            loader.add_value('file_name', filename)  # Use the constructed filename here
             loader.add_value('file_urls', absolute_url)
-            loader.add_xpath('file_name', './/text()')  # Selects the text of the link (file name)
+
+            self.logger.stats_logs(f"Downloaded: {filename}")
+
             yield loader.load_item()
-    
+
+
   # Summarize stats when the spider finishes (with a custom logger method attached to this spider)
     def closed(self, reason):
         self.summarize_stats(reason)
 
     def summarize_stats(self, reason):
         downloaded_count = self.crawler.stats.get_value('file_status_count/downloaded', 0)
-        self.logger.verbose(f"Number of files downloaded: {downloaded_count}")
-
-
+        self.logger.stats_logs(f"Number of files downloaded: {downloaded_count}")

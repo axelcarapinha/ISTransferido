@@ -1,3 +1,4 @@
+import yaml
 # Scrapy settings for istransferido project
 #
 # For simplicity, this file contains only settings considered important or
@@ -7,17 +8,20 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "istransferido"
+# To know the final output folder defined in the yaml file
+file_path = '../config.yaml'
+with open(file_path, 'r') as file:
+    config = yaml.safe_load(file)
 
+BOT_NAME = "istransferido"
 SPIDER_MODULES = ["istransferido.spiders"]
 NEWSPIDER_MODULE = "istransferido.spiders"
-
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "istransferido (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False #TODO try other way
+ROBOTSTXT_OBEY = False # has a download delay, so it can behave like a human
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -68,7 +72,7 @@ ITEM_PIPELINES = {
 
 DOWNLOAD_TIMEOUT = 30
 DOWNLOAD_DELAY = 2 # avoid overloading the server
-FILES_STORE = '/home/heyuser/Desktop/testinfiles'
+FILES_STORE = f"../{config['downloads_folder']}" 
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -79,7 +83,7 @@ FILES_STORE = '/home/heyuser/Desktop/testinfiles'
 #AUTOTHROTTLE_MAX_DELAY = 60
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
+AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
 
