@@ -9,7 +9,7 @@ Disclaimer: optimized for Fenix's pages, but easily customizable with other XPat
 ### Configuration
 1. Prepare the virtual environment
 ```bash
-bash init.sh
+bash install.sh
 ```
 2. Create the file with credentials
 ```bash
@@ -35,6 +35,9 @@ Download ALL the files + organize the inbox
 # Run spider, RUN!
 cd istransferido/ && scrapy crawl ist_spider && cd ../ && bash filter-inbox.sh 
 ```
+If the command fails for some reason (configuration, conflicts, ...), remember to go back the main directory of the project. <br/>
+Otherwise, it won't work.
+
 
 ### Contributions
 Feel free to change or contribute! <br/>
